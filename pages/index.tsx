@@ -1,7 +1,10 @@
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 
-const InvoiceUploader = dynamic(() => import('../components/InvoiceUploader'), { ssr: false })
+const InvoiceUploader = dynamic(
+  () => import('../components/InvoiceUploader'),
+  { ssr: false }
+)
 
 export default function InvoicesPage() {
   return (
