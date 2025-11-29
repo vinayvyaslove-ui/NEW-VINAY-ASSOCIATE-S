@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '../../lib/supabaseClient'
+import { supabase } from './supabaseClient'
 
 export default function GstReports() {
   const [summary, setSummary] = useState<any>({ total: 0, gst: 0 })
