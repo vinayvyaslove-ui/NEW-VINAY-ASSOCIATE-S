@@ -13,7 +13,7 @@ export default function AuthPage() {
 
     const { data, error } = await supabase.auth.signUp({
       email,
-      password
+      password,
     })
 
     if (error) {
@@ -22,20 +22,14 @@ export default function AuthPage() {
     }
 
     const user = data.user
-
     setMessage('Check your email for confirmation. Creating profile...')
 
-    // only runs when email confirmation is disabled
     if (user) {
-      const { error: pErr } = await supabase.from('profiles').upsert([
-        {
-          id: user.id,
-          full_name: '',
-          role: 'dealer'
-        }
-      ])
+      const { error: pErr } = await supabase
+        .from('profiles')
+        .upsert([{ id: user.id, full_name: '', role: 'dealer' }])
 
-      if (pErr) setMessage('Signed up but failed to create profile: ' + pErr.message)
+      if (pErr) setMessage('Profile error: ' + pErr.message)
       else setMessage('Account created successfully!')
     }
   }
@@ -45,15 +39,11 @@ export default function AuthPage() {
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
-      password
+      password,
     })
 
-    if (error) {
-      setMessage(error.message)
-      return
-    }
+    if (error) return setMessage(error.message)
 
-    setMessage('Login successful!')
     router.push('/dashboard')
   }
 
@@ -62,20 +52,11 @@ export default function AuthPage() {
       <h2 className="text-2xl font-bold mb-4">Authentication</h2>
 
       <div className="flex flex-col gap-4 max-w-md">
-        <input
-          className="border p-2"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <input className="border p-2" placeholder="Email"
+          value={email} onChange={(e) => setEmail(e.target.value)} />
 
-        <input
-          className="border p-2"
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <input className="border p-2" placeholder="Password" type="password"
+          value={password} onChange={(e) => setPassword(e.target.value)} />
 
         <button className="bg-blue-600 text-white p-2" onClick={signUp}>
           Sign Up
