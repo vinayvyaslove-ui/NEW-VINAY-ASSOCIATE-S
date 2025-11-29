@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { supabase } from './supabaseClient'
+import { supabase } from '../supabaseClient'
 import { useRouter } from 'next/router'
 
 export default function NewInvoice() {
@@ -12,33 +12,42 @@ export default function NewInvoice() {
 
   const submit = async () => {
     setMessage('Saving...')
+
     const invoice = {
-      customer, date, amount: parseFloat(amount || '0'), gst_rate: parseFloat(gstRate || '0')
+      customer,
+      date,
+      amount: parseFloat(amount || '0'),
+      gst_rate: parseFloat(gstRate || '0'),
     }
+
     const { error } = await supabase.from('invoices').insert([{ data: invoice }])
+
     if (error) setMessage('Error: ' + error.message)
-    else {
-      setMessage('Saved')
-      router.push('/invoices')
-    }
+    else setMessage('Invoice saved!')
   }
 
   return (
-    <main className="min-h-screen p-8 bg-gray-100">
-      <div className="max-w-2xl bg-white p-6 rounded shadow">
-        <h2 className="text-xl font-semibold mb-4">Create Invoice</h2>
-        <label className="block mb-2">Customer</label>
-        <input className="w-full p-2 border rounded mb-3" value={customer} onChange={e=>setCustomer(e.target.value)} />
-        <label className="block mb-2">Date</label>
-        <input type="date" className="w-full p-2 border rounded mb-3" value={date} onChange={e=>setDate(e.target.value)} />
-        <label className="block mb-2">Amount (₹)</label>
-        <input className="w-full p-2 border rounded mb-3" value={amount} onChange={e=>setAmount(e.target.value)} />
-        <label className="block mb-2">GST Rate (%)</label>
-        <input className="w-full p-2 border rounded mb-3" value={gstRate} onChange={e=>setGstRate(e.target.value)} />
-        <div className="flex space-x-2">
-          <button onClick={submit} className="px-4 py-2 bg-green-600 text-white rounded">Save</button>
-        </div>
-        {message && <p className="mt-3 text-sm">{message}</p>}
+    <main className="min-h-screen p-8">
+      <h2 className="text-2xl font-bold mb-4">New Invoice</h2>
+
+      <div className="flex flex-col gap-3 max-w-lg">
+        <input className="border p-2" placeholder="Customer"
+          value={customer} onChange={(e) => setCustomer(e.target.value)} />
+
+        <input className="border p-2" placeholder="Date"
+          value={date} onChange={(e) => setDate(e.target.value)} />
+
+        <input className="border p-2" placeholder="Amount"
+          value={amount} onChange={(e) => setAmount(e.target.value)} />
+
+        <input className="border p-2" placeholder="GST Rate"
+          value={gstRate} onChange={(e) => setGstRate(e.target.value)} />
+
+        <button className="bg-blue-600 text-white p-2" onClick={submit}>
+          Save Invoice
+        </button>
+
+        {message && <p className="mt-4 text-red-600">{message}</p>}
       </div>
     </main>
   )
