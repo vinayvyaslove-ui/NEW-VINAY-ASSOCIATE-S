@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { supabase } from '../../lib/supabaseClient'
+import { supabase } from '../supabaseClient'
 
 export default function AccountantDashboard() {
   const [clients, setClients] = useState<any[]>([])
